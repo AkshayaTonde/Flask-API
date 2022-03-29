@@ -7,21 +7,23 @@ from flask import request
 app = Flask(__name__)
 @app.route("/")#URL leading to method
 
-cluster = MongoClient("mongodb+srv://akshaya:akshaya1@cluster0.solpc.mongodb.net/CAOne?retryWrites=true&w=majority")
+def ConnectionFunction():
 
-db = cluster["CAOne"]
-colection = db["Users"]
+  cluster = MongoClient("mongodb+srv://akshaya:akshaya1@cluster0.solpc.mongodb.net/CAOne?retryWrites=true&w=majority")
 
-#to inser the document 
-#post = {"_id": 0, "name": "Leena", "username":"idleena", "email":"leena@gmail.com", "profilepict":" ","password": "123", "fav_Cat":["1" , "2"]}
-#colection.insert_one(post)
+  db = cluster["CAOne"]
+  colection = db["Users"]
 
-#to read database 
+  #to inser the document 
+  #post = {"_id": 0, "name": "Leena", "username":"idleena", "email":"leena@gmail.com", "profilepict":" ","password": "123", "fav_Cat":["1" , "2"]}
+  #colection.insert_one(post)
 
-results = colection.find({"name":"Neha"})
+  #to read database 
 
-for result in results:
-    print(result)
+  results = colection.find({"name":"Neha"})
+
+  for result in results:
+      print(result)
 
 if __name__ == "__main__":
   app.run(host='0.0.0.0',port='8080', ssl_context=('../../../home/akshaya/cert.pem', '../../../home/akshaya/privkey.pem')) 
