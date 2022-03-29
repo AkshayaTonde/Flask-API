@@ -1,4 +1,5 @@
 from ipaddress import collapse_addresses
+import re
 import pymongo
 from pymongo import MongoClient
 from flask import Flask
@@ -22,8 +23,11 @@ def ConnectionFunction():
 
   results = colection.find({"name":"Neha"})
 
-  for result in results:
-      print(result)
+  return results
+
+  #for result in results:
+    #  print(result)
+
 
 if __name__ == "__main__":
   app.run(host='0.0.0.0',port='8080', ssl_context=('../../../home/akshaya/cert.pem', '../../../home/akshaya/privkey.pem')) 
