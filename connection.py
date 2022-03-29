@@ -1,6 +1,11 @@
 from ipaddress import collapse_addresses
 import pymongo
 from pymongo import MongoClient
+from flask import Flask
+from flask import request
+
+app = Flask(__name__)
+@app.route("/")#URL leading to method
 
 cluster = MongoClient("mongodb+srv://akshaya:akshaya1@cluster0.solpc.mongodb.net/CAOne?retryWrites=true&w=majority")
 
@@ -17,3 +22,6 @@ results = colection.find({"name":"Neha"})
 
 for result in results:
     print(result)
+
+if __name__ == "__main__":
+  app.run(host='0.0.0.0',port='8080', ssl_context=('../../../home/akshaya/cert.pem', '../../../home/akshaya/privkey.pem')) 
