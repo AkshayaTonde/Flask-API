@@ -30,7 +30,7 @@ def show():
         r_list.append(r)
         print(r)
 
-    return JSONEncoder().encode({"results": r_list})
+    return json.loads(JSONEncoder().encode({"results": r_list}))
 
 
 if __name__ == "__main__":
