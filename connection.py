@@ -19,7 +19,7 @@ class JSONEncoder(json.JSONEncoder):
 
 @app.route("/")
 def show():
-    client = MongoClient("mongodb://xlash:PWzJpIo975Q7hplS@cluster0-shard-00-00.solpc.mongodb.net:27017,cluster0-shard-00-01.solpc.mongodb.net:27017,cluster0-shard-00-02.solpc.mongodb.net:27017/myFirstDatabase?ssl=true&replicaSet=atlas-718qah-shard-0&authSource=admin&retryWrites=true&w=majority")
+    client = MongoClient("mongodb+srv://akshaya:akshaya1@cluster0.solpc.mongodb.net/CAOne?retryWrites=true&w=majority")
     db = client.CAOne
     collection = db["Users"]
 
@@ -29,9 +29,9 @@ def show():
     for r in results:
         r_list.append(r)
         print(r)
-
-    return JSONEncoder().encode({"results": r_list})
+    
+    return json.loads(JSONEncoder().encode({"results": r_list}))
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port='8080', debug=True)
+    app.run(host='0.0.0.0', port='8080')
