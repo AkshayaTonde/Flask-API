@@ -29,7 +29,11 @@ def show():
     for r in results:
         r_list.append(r)
         print(r)
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> ecef39b588615ee2b94a1108caea273446f6f151
     return json.loads(JSONEncoder().encode({"results": r_list}))
 
 
