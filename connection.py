@@ -1,3 +1,4 @@
+
 from ipaddress import collapse_addresses
 from pymongo import MongoClient
 import pymongo
@@ -17,7 +18,7 @@ class JSONEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, o)
 
 
-@app.route("/")
+@app.route("/getUsers", methods=['GET'])
 def show():
     client = MongoClient("mongodb+srv://akshaya:akshaya1@cluster0.solpc.mongodb.net/CAOne?retryWrites=true&w=majority")
     db = client.CAOne
@@ -28,14 +29,12 @@ def show():
     r_list = []
     for r in results:
         r_list.append(r)
-        print(r)
-<<<<<<< HEAD
-    
-=======
-
->>>>>>> ecef39b588615ee2b94a1108caea273446f6f151
+       # print(r)
     return json.loads(JSONEncoder().encode({"results": r_list}))
 
+@app.route("/getPosts", methods=['GET'])
+def showAllPosts():
 
-if __name__ == "__main__":
+
+  if __name__ == "__main__":
     app.run(host='0.0.0.0', port='8080')
