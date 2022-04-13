@@ -1,7 +1,6 @@
 from flask import Flask, jsonify, make_response, request
 from flask_mongoengine import MongoEngine
 from api_constants import mongodb_password
-i
 
 app = Flask(__name__)
 
