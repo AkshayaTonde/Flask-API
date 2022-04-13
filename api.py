@@ -1,4 +1,3 @@
-
 from flask import Flask, jsonify, make_response, request
 from flask_mongoengine import MongoEngine
 from api_constants import mongodb_password
@@ -33,6 +32,49 @@ class Posts(db.Document):
             "category_id": self.category_id
         }
 
+class Users(db.Document):
+
+    _id = db.IntField()
+    name = db.StringField()
+    username = db.StringField()
+    password = db.StringField()
+    email = db.StringField()
+    profilepict = db.StringField()
+    fav_cat = db.StringField()
+
+    def to_json(self):
+        # Converts the object to JSON 
+        return {
+            "_id": self.id,
+            "name": self.name,
+            "username": self.username,
+            "password" : self.password,
+            "email": self.email,
+            "profilepict" : self.profilepict,
+            "fav_cat" : self.fav_cat
+        }
+
+
+@app.route('/api/viewUsers', methods=['GET'])
+def viewUsers():
+    users_list =[]
+
+    for user in Users.objects:
+        print(user)
+        users_list.append(user)
+        
+    return make_response(jsonify(users_list), 200)
+
+
+@app.route('/api/addUser', methods=['POST'])
+def addUser():
+
+    content = request.json
+    new_user = Users(_id= 5,name= "Saurabh", username="saurabh@1", password="Saurabh@1", email="mypass1234", profilepict="/one.jpg", fav_cat="[1,2,3]")
+    #new_user = users(_id= content['_id'],name= content['name'], username=content['username'], password=content['password'], email=content['email'], profilepict=content['profilepict'], fav_cat=content['fav_cat'])
+    new_user.save()
+    return make_response("User added to table", 200)
+
 @app.route('/api/addPost', methods=['GET'])
 def db_AddPost():
 
@@ -40,6 +82,8 @@ def db_AddPost():
     post2.save()
     return make_response("Success", 201)
 
+#Method and API to show all posts if GET is called 
+# If post method is called then a new post will be added 
 @app.route('/api/showAllPosts', methods=['GET', 'POST'])
 def db_showposts():
 
@@ -62,6 +106,7 @@ def db_showposts():
 
         return make_response("Added a new post", 201)
 
+#method and API to show the posts by the chosen category
 @app.route('/api/ShowPostsByCategory/<category_id>', methods=['GET'])
 def db_showpost_byCat(category_id):
     if request.method == 'GET':
