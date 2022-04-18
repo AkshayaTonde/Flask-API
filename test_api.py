@@ -131,6 +131,7 @@ def createPost():
     return {"Result":"Success"}
 
 #API to like the post 
+# comment as we changed the data type of postid to objec
 @app.route('/api/likePost', methods=['PUT'])
 def voteLike():
 
@@ -150,10 +151,11 @@ def voteLike():
     
     return ({"Results": 1})
 
-#delete Post 
-#yet to make to progress 
-@app.route('/api/deletePost', methods=['delete'])
-def deletePost():
+
+#Unlike the post 
+#Yet to test the changes 
+@app.route('/api/unlikePost', methods=['PUT'])
+def voteLike():
 
     collection = db["Posts"]
     postid= request.json["postid"]
@@ -163,13 +165,27 @@ def deletePost():
     likes= post["like"]
 
     if userid in post["like"]:
-        return {"Result": 0}
+        likes.remove(userid)
+        return {"Result": 1}
     else:
-        likes.append(userid)
+        return ({"Results": 0})
 
-    collection.find_one_and_update({'_id':postid},{ '$set': { "like" : likes} })
-    
-    return ({"Results": 1})
+#delete Post 
+#yet to make to progress need to check 
+@app.route('/api/deletePost', methods=['DELETE'])
+def deletePost():
+
+    collection = db["Posts"]
+    postid= request.json["postid"]
+
+    userid= request.json["userid"]
+
+    for post in collection.find_one({"_id" : postid}):
+        print(post)
+
+    collection.find_one_and_delete({"_id" : postid, "creator_id": userid})
+    return {"Results": 1}
+  
 
 
 if __name__ == "__main__":
