@@ -80,15 +80,16 @@ def ViewAllPosts():
     return json.loads(JSONEncoder().encode({"results": post_list}))
 
 #View posts by the category
-@app.route('/api/ViewPostByCategory/<post_categoty>', methods=['GET'])
-def ViewPostByCategory(post_categoty):
+@app.route('/api/ViewPostByCategory/<post_category>', methods=['GET'])
+def ViewPostByCategory(post_category):
 
     collection = db["Posts"]
-    print("Post category value : ", post_categoty)
+    #print("Post category value : ", post_category, type(post_category))
     
+    #
 
     post_list = []
-    for post in collection.find({"post_categoty" : int(post_categoty)}):
+    for post in collection.find({"post_category" : int(post_category)}):
         print(post)
         post_list.append(post)
 
@@ -117,7 +118,7 @@ def createPost():
     }  
 
     """
-    _id = request.json["_id"]
+    #_id = request.json["_id"]
     creator_id= request.json["creator_id"]
     post_text=request.json["post_text"]
     media = request.json["media"]
@@ -125,7 +126,7 @@ def createPost():
     like=request.json["like"]
     post_category=request.json["post_category"]
 
-    user_id = collection.insert_one({"_id": _id,"creator_id": creator_id, "post_text": post_text,"media":media,"timestamp": timestamp,"like": like,"post_category": post_category })
+    user_id = collection.insert_one({"creator_id": creator_id, "post_text": post_text,"media":media,"timestamp": timestamp,"like":[ ],"post_category": post_category })
 
     return {"Result":"Success"}
 
@@ -150,8 +151,9 @@ def voteLike():
     return ({"Results": 1})
 
 #delete Post 
-
-
+#yet to make to progress 
+@app.route('/api/deletePost', methods=['delete'])
+def deletePost():
 
     collection = db["Posts"]
     postid= request.json["postid"]
