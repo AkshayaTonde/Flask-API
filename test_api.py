@@ -155,7 +155,7 @@ def voteLike():
 #Unlike the post 
 #Yet to test the changes 
 @app.route('/api/unlikePost', methods=['PUT'])
-def voteLike():
+def voteunLike():
 
     collection = db["Posts"]
     postid= request.json["postid"]
