@@ -94,6 +94,7 @@ def ViewPostByCategory(post_categoty):
 
     return json.loads(JSONEncoder().encode({"results": post_list}))
 
+<<<<<<< HEAD
 #Create a new post 
 #This will accept input from request JSON request and 
 @app.route('/api/createPost', methods=['POST'])
@@ -152,7 +153,27 @@ def voteLike():
 #delete Post 
 
 
+=======
+#API to like the post 
+@app.route('/api/likePost', methods=['PUT'])
+def voteLike():
+>>>>>>> aaecd7b2cc28cf6d7042dfb57f129edb8fd855d8
 
+    collection = db["Posts"]
+    postid= request.json["postid"]
+    userid= request.json["userid"]
+
+    post = collection.find_one({"_id" : int(postid)})
+    likes= post["like"]
+
+    if userid in post["like"]:
+        return {"Result": 0}
+    else:
+        likes.append(userid)
+
+    collection.find_one_and_update({'_id':postid},{ '$set': { "like" : likes} })
+    
+    return ({"Results": 1})
 
 
 if __name__ == "__main__":
