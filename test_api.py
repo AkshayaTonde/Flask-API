@@ -1,4 +1,6 @@
+
 from ipaddress import collapse_addresses
+from turtle import update
 from pymongo import MongoClient
 import pymongo
 from flask import Flask, jsonify, request
@@ -8,6 +10,7 @@ from bson import ObjectId
 
 
 app = Flask(__name__)
+CORS(app)
 
 client = MongoClient("mongodb+srv://akshaya:akshaya1@cluster0.solpc.mongodb.net/CAOne?retryWrites=true&w=majority")
 db = client.CAOne
@@ -28,11 +31,11 @@ def viewUsers():
     for user in collection.find({}):
         print(user)
         users_list.append(user)
-        
+    
     return json.loads(JSONEncoder().encode({"results": users_list}))
 
 #add users into the database 
-@app.route('/api/AddUser', methods=['POST'])
+@app.route('/addUser', methods=['POST'])
 def addUser():
     collection = db["Users"]
 
@@ -72,7 +75,8 @@ def ViewAllPosts():
     for post in collection.find({}):
         print(post)
         post_list.append(post)
-        
+    
+   # post_list.sort(key="_id")
     return json.loads(JSONEncoder().encode({"results": post_list}))
 
 #View posts by the category
@@ -89,6 +93,64 @@ def ViewPostByCategory(post_categoty):
         post_list.append(post)
 
     return json.loads(JSONEncoder().encode({"results": post_list}))
+
+#Create a new post 
+#This will accept input from request JSON request and 
+@app.route('/api/createPost', methods=['POST'])
+def createPost():
+    collection = db["Posts"]
+
+    """
+    {
+        "_id": 2
+        "creator_id": 1,
+        "post_text": "Test Text",
+        "media": "URL",
+        "timestamp": {
+        "$timestamp": {
+            "t": 0,
+             "i": 0
+            }
+        },
+        "like": [""],
+        "post_category": 1
+    }  
+
+    """
+    _id = request.json["_id"]
+    creator_id= request.json["creator_id"]
+    post_text=request.json["post_text"]
+    media = request.json["media"]
+    timestamp=request.json["timestamp"]
+    like=request.json["like"]
+    post_category=request.json["post_category"]
+
+    user_id = collection.insert_one({"_id": _id,"creator_id": creator_id, "post_text": post_text,"media":media,"timestamp": timestamp,"like": like,"post_category": post_category })
+
+    return {"Result":"Success"}
+
+#API to like the post 
+@app.route('/api/likePost', methods=['PUT'])
+def voteLike():
+
+    collection = db["Posts"]
+    postid= request.json["postid"]
+    userid= request.json["userid"]
+
+    post = collection.find_one({"_id" : int(postid)})
+    likes= post["like"]
+
+    if userid in post["like"]:
+        return {"Result": 0}
+    else:
+        likes.append(userid)
+
+    collection.find_one_and_update({'_id':postid},{ '$set': { "like" : likes} })
+    
+    return ({"Results": 1})
+
+#delete Post 
+
 
 
 
