@@ -123,7 +123,7 @@ def createPost():
     post_text=request.json["post_text"]
     media = request.json["media"]
     timestamp=request.json["timestamp"]
-    like=request.json["like"]
+   # like=request.json["like"]
     post_category=request.json["post_category"]
 
     user_id = collection.insert_one({"creator_id": creator_id, "post_text": post_text,"media":media,"timestamp": timestamp,"like":[ ],"post_category": post_category })
@@ -166,6 +166,7 @@ def voteunLike():
 
     if userid in post["like"]:
         likes.remove(userid)
+        collection.find_one_and_update({'_id':postid},{ '$set': { "like" : likes} })
         return {"Result": 1}
     else:
         return ({"Results": 0})
