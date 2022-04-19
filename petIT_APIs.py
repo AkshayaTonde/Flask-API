@@ -135,21 +135,25 @@ def createPost():
 @app.route('/api/likePost', methods=['PUT'])
 def voteLike():
 
+    # sample JSON request 
+    # {
+    # "postid": "625e9cedfc041c5eaf570c69",
+    # "userid": "Neha"
+    # }  
+
     collection = db["Posts"]
     postid= request.json["postid"]
     userid= request.json["userid"]
 
-    post = collection.find_one({"_id" : int(postid)})
+    post = collection.find_one({"_id" : ObjectId(postid)})
     likes= post["like"]
 
     if userid in post["like"]:
         return {"Result": 0}
     else:
         likes.append(userid)
-
-    collection.find_one_and_update({'_id':postid},{ '$set': { "like" : likes} })
-    
-    return ({"Results": 1})
+        collection.find_one_and_update({'_id':ObjectId(postid)},{ '$set': { "like" : likes} })
+        return ({"Results": 1})
 
 
 #Unlike the post 
@@ -157,16 +161,22 @@ def voteLike():
 @app.route('/api/unlikePost', methods=['PUT'])
 def voteunLike():
 
+    #Sample JSON request
+    # {
+    # "postid": "625e9cedfc041c5eaf570c69",
+    # "userid": "Neha"
+    # }  
+
     collection = db["Posts"]
     postid= request.json["postid"]
     userid= request.json["userid"]
 
-    post = collection.find_one({"_id" : int(postid)})
+    post = collection.find_one({"_id" : ObjectId(postid)})
     likes= post["like"]
 
     if userid in post["like"]:
         likes.remove(userid)
-        collection.find_one_and_update({'_id':postid},{ '$set': { "like" : likes} })
+        collection.find_one_and_update({'_id':ObjectId(postid)},{ '$set': { "like" : likes} })
         return {"Result": 1}
     else:
         return ({"Results": 0})
@@ -181,11 +191,14 @@ def deletePost():
 
     userid= request.json["userid"]
 
-    for post in collection.find_one({"_id" : postid}):
-        print(post)
+    # #to test the results
+    # for post in collection.find_one({"_id" : ObjectId(postid)}):
+    #     print(post)
 
-    collection.find_one_and_delete({"_id" : postid, "creator_id": userid})
-    return {"Results": 1}
+    if collection.find_one_and_delete({"_id" : ObjectId(postid), "creator_id": userid}):
+        return {"Results": 1}
+    else:
+        return {"Results": 0}
   
 
 
